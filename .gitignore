@@ -160,11 +160,7 @@ cython_debug/
 #.idea/
 
 .DS_Store
-.secrets/*.json
 .vscode/
-.database_files/
-.personal_data/*/*json
-.personal_data/*/duck*
 
 # ignore secrets, virtual environments and typical python compilation artifacts
 secrets.toml
@@ -176,3 +172,4 @@ secrets.toml
 # ignore duckdb
 *.duckdb
 *.wal
+.dlt/*.json

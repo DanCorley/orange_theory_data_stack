@@ -1,0 +1,21 @@
+services:
+  metabase_app:
+    container_name: metabase_app
+    platform: linux/x86_64
+    build:
+      context: ./metabase
+      dockerfile: Dockerfile
+    volumes:
+      - ./otf_api_data:/otf_api_data
+      - ./metabase:/metabase-data
+      - ./metabase/plugins/duckdb.metabase-driver.jar:/plugins/duckdb.metabase-driver.jar
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      MB_PLUGINS_DIR: /plugins
+      MB_DB_TYPE: h2
+      MB_DB_DBNAME: metabase
+      MB_DB_FILE: /metabase-data/metabase-data.mv.db
+      MB_DB_FILENAME: /metabase.db
+      MB_LOAD_SAMPLE_CONTENT: false
