@@ -1,11 +1,10 @@
 config:
   manifest_path: dbt/target/manifest.json
   metabase_url: http://localhost:3000
-  metabase_username: hello@dancorley.com
-  metabase_password: xiQ7BG6vfQ6atkh)pC7s
+  metabase_username: modify@this_email.com
+  metabase_password: super_secret_password
   metabase_use_http: true
   http_timeout: 600
-  # sync_timeout: 0
   skip_sources: true
   models:
     metabase_database: "duckdb"
