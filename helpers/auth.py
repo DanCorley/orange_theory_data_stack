@@ -6,7 +6,7 @@ from dlt.sources.helpers.rest_client.auth import AuthConfigBase
 
 class OAuth2OTF(AuthConfigBase):
 
-    def __init__(self, file_name:str = '.secrets/aws_refresh_payload.json'):
+    def __init__(self, file_name:str = '.dlt/aws_refresh_payload.json'):
         self.file_name = file_name
 
     def build_access_token_request(self) -> dict:
