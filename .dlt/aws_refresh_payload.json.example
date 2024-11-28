@@ -1,0 +1,11 @@
+{
+  "UserContextData": {
+    "EncodedData": "payload should look like this"
+  },
+  "AuthParameters": {
+    "DEVICE_KEY": "not_the_actual_token",
+    "REFRESH_TOKEN": "not_the_actual_token"
+  },
+  "AuthFlow": "REFRESH_TOKEN_AUTH",
+  "ClientId": "not_the_actual_token"
+}

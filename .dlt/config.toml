@@ -1,0 +1,18 @@
+[runtime]
+dlthub_telemetry = true
+log_level="DEBUG"
+
+[load]
+workers=3
+
+[destination.filesystem]
+bucket_url = '.'
+table_format = "deltalake"
+
+[destination.relative_destination]
+
+[normalize]
+loader_file_format="parquet"
+
+[normalize.data_writer]
+disable_compression=false

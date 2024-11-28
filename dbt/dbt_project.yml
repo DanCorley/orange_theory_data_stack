@@ -1,0 +1,22 @@
+name: 'dbt_orange_theory'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_orange_theory'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_orange_theory:
+    +schema: source_models
+    +docs:
+      node_color: silver

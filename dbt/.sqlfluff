@@ -1,0 +1,41 @@
+[sqlfluff]
+templater = dbt
+dialect = duckdb
+nocolor = True
+max_line_length = 120
+large_file_skip_byte_limit = 36000
+exclude_rules =
+  L009,
+  L031,
+  L034,
+  L022,
+  L050,
+  L051,
+  L032,
+  CV11
+
+
+[sqlfluff:indentation]
+tab_space_size = 2
+indent_unit = space
+indented_on_contents = False
+
+[sqlfluff:layout:type:binary_operator]
+spacing_within = touch
+line_position = leading
+
+[sqlfluff:layout:type:comma]
+spacing_before = touch
+line_position = leading
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:aliasing.table]  # tables
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]  # columns
+aliasing = explicit
+
+[sqlfluff:rules:capitalisation.identifiers] # aliases
+extended_capitalisation_policy = lower
