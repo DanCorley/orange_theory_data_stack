@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: orange_theory_delta
+    meta:
+      external_location: "delta_scan('{prefix}/{name}/')"
+      prefix: "otf_api_data"
+    tables: 
+    - name: telemetry
+    - name: body_composition
+    - name: bookings
+    - name: heart_rate
+    - name: heart_rate__history
+    - name: me
+    - name: performance_summaries
+    - name: telemetry__telemetry
+
+  - name: dlt_metadata
+    meta:
+      external_location: "'{prefix}/{name}/*.jsonl'"
+      prefix: "otf_api_data"
+    tables:
+      - name: _dlt_loads
+      - name: _dlt_pipeline_state
+      - name: _dlt_version

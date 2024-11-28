@@ -1,0 +1,83 @@
+anchors: #https://www.educative.io/blog/advanced-yaml-syntax-cheatsheet#anchors
+  - anchor: &member_ref
+      name: member_uuid
+      data_tests:
+        - relationships:
+            to: ref('me')
+            field: member_uuid
+  - anchor: &booking_ref
+      name: booking_id
+      data_tests:
+        - relationships:
+            to: ref('bookings')
+            field: booking_id
+  - anchor: &dlt_load_id
+      name: _dlt_load_id
+      data_tests:
+        - relationships:
+            to: ref('dlt_loads')
+            field: load_id
+
+
+models:
+  - name: body_composition
+    columns:
+      - *member_ref
+      - *dlt_load_id
+  - name: bookings
+    columns:
+      - *member_ref
+      - *dlt_load_id
+  - name: heart_rate
+    columns:
+      - *member_ref
+      - *dlt_load_id
+      - name: dlt_record_id
+        data_tests:
+          - not_null
+          - unique
+  - name: heart_rate__history
+    columns:
+      - name: dlt_parent_id
+        data_tests:
+          - relationships:
+              to: ref('heart_rate')
+              field: dlt_record_id
+  - name: me
+    columns:
+      - *dlt_load_id
+      - name: member_uuid
+        data_tests:
+          - not_null
+          - unique
+  - name: performance_summaries
+    columns:
+      - *dlt_load_id
+      - *booking_ref
+  - name: telemetry
+    columns:
+      - *dlt_load_id
+      - *booking_ref
+      - name: dlt_record_id
+        data_tests:
+          - not_null
+          - unique
+  - name: telemetry__telemetry
+    columns:
+      - name: dlt_parent_id
+        data_tests:
+          - relationships:
+              to: ref('telemetry')
+              field: dlt_record_id
+  - name: zone_summary
+    columns:
+      - *booking_ref
+
+  - name: dlt_loads
+    columns:
+      - name: load_id
+        data_tests:
+          - not_null
+          - unique
+  - name: dlt_pipeline_state
+  - name: dlt_version
