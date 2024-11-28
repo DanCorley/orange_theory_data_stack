@@ -10,7 +10,7 @@ from .auth import OAuth2OTF
 
 
 @dlt.source
-def otf_source(args) -> Generator[DltResource, None, None]:
+def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[DltResource, None, None]:
 
 
     def invalidate_null_content(response: Response) -> Response:
@@ -89,7 +89,7 @@ def otf_source(args) -> Generator[DltResource, None, None]:
                 "name": "body_composition",
                 "primary_key": "scanResultUUId",
                 "endpoint": {
-                    "path": "https://api.orangetheory.co/member/members/87e005b6-5fe4-4852-8192-63ec26e061e6/body-composition",
+                    "path": f"https://api.orangetheory.co/member/members/{member_uuid}/body-composition",
                     "paginator": "single_page",
                 }
             },
@@ -97,7 +97,7 @@ def otf_source(args) -> Generator[DltResource, None, None]:
                 "name": "heart_rate",
                 "primary_key": "memberUuid",
                 "endpoint": {
-                    "path": "https://api.yuzu.orangetheory.com/v1/physVars/maxHr/history?memberUuid=87e005b6-5fe4-4852-8192-63ec26e061e6",
+                    "path": f"https://api.yuzu.orangetheory.com/v1/physVars/maxHr/history?memberUuid={member_uuid}",
                     "paginator": "single_page",
                     "data_selector": "$",
                 },
@@ -123,7 +123,7 @@ def otf_source(args) -> Generator[DltResource, None, None]:
             # {
             #     "name": "challenges",
             #     "endpoint": {
-            #         "path": "https://api.orangetheory.co/challenges/v3.1/member/87e005b6-5fe4-4852-8192-63ec26e061e6",
+            #         "path": f"https://api.orangetheory.co/challenges/v3.1/member/{member_uuid}",
             #         "paginator": "single_page",
             #         "data_selector": "Dto",
             #         # "response_actions": [add_and_remove_fields],
