@@ -1,8 +1,0 @@
-dbt_orange_theory:
-  outputs:
-    dev:
-      type: duckdb
-      path: otf_api_data/duck.db
-      plugins:
-        - module: delta
-  target: dev
