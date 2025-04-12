@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Generator, Any
+from typing import Generator
 
 import dlt
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
@@ -70,15 +70,8 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "name": "performance_summaries",
                 "include_from_parent": ["id"],
                 "endpoint": {
-                    "path": "https://api.orangetheory.io/v1/performance-summaries/{id}",
+                    "path": "https://api.orangetheory.io/v1/performance-summaries/{resources.bookings.workout.id}",
                     "paginator": "single_page",
-                    "params": {
-                        "id": {
-                            "type": "resolve",
-                            "resource": "bookings",
-                            "field": "workout.id",
-                        },
-                    },
                     "response_actions": [
                         invalidate_null_content,
                         {"status_code": 204, "action": "ignore"}
@@ -107,29 +100,60 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "primary_key": "classHistoryUuid",
                 "include_from_parent": ["id"],
                 "endpoint": {
-                    "path": "https://api.yuzu.orangetheory.com/v1/performance/summary?classHistoryUuid={id}",
+                    "path": "https://api.yuzu.orangetheory.com/v1/performance/summary",
                     "paginator": "single_page",
                     "data_selector": "$",
                     "params": {
-                        "id": {
-                            "type": "resolve",
-                            "resource": "bookings",
-                            "field": "workout.id",
-                        },
-                        "maxDataPoints": 720
+                        "classHistoryUuid": "{resources.bookings.workout.id}",
+                        "maxDataPoints": 150
                     },
                 },
             },
-            # {
-            #     "name": "challenges",
-            #     "endpoint": {
-            #         "path": f"https://api.orangetheory.co/challenges/v3.1/member/{member_uuid}",
-            #         "paginator": "single_page",
-            #         "data_selector": "Dto",
-            #         # "response_actions": [add_and_remove_fields],
-            #         # "primary_key": "name",
-            #     },
-            # }
+            {
+                "name": "challenges",
+                "primary_key": ["ChallengeCategoryId", "ChallengeSubCategoryId"],
+                "endpoint": {
+                    "path": f"https://api.orangetheory.co/challenges/v3.1/member/{member_uuid}",
+                    "data_selector": "$.Dto[Programs,Challenges][*]",
+                },
+            },
+            {
+                "name": "challenge_activity",
+                "primary_key": ["ChallengeCategoryId", "ChallengeName"],
+                "include_from_parent": ["ChallengeSubCategoryId"],
+                "max_table_nesting": 1,
+                "endpoint": {
+                    "path": f"https://api.orangetheory.co/challenges/v3/member/{member_uuid}/benchmarks",
+                    "paginator": "single_page",
+                    "data_selector": "$.Dto",
+                    "params": {
+                        "challengeTypeId": "{resources.challenges.ChallengeCategoryId}",
+                        "challengeSubTypeId": "{resources.challenges.ChallengeSubCategoryId}",
+                    },
+                },
+            },
+            {
+                # benchmarks have a different schema than challenges, but same endpoint
+                "name": "benchmarks",
+                "primary_key": ["EquipmentId", "EquipmentName"],
+                "endpoint": {
+                    "path": f"https://api.orangetheory.co/challenges/v3.1/member/{member_uuid}",
+                    "data_selector": "$.Dto.Benchmarks[*]",
+                },
+            },
+            {
+                "name": "benchmark_activity",
+                "primary_key": ["ChallengeCategoryId", "EquipmentId"],
+                "endpoint": {
+                    "path": f"https://api.orangetheory.co/challenges/v3/member/{member_uuid}/benchmarks",
+                    "paginator": "single_page",
+                    "data_selector": "$.Dto",
+                    "params": {
+                        "challengeTypeId": "1",
+                        "EquipmentId": "{resources.benchmarks.EquipmentId}",
+                    },
+                },
+            },
         ],
     }
 
