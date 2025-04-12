@@ -21,7 +21,7 @@ def load_orange_theory(args=args) -> None:
 
 def run_dbt(args=args) -> None:
     dbt = dbtRunner()
-    cli_args = ["run", "--project-dir", "dbt", "--profiles-dir", "dbt"]
+    cli_args = ["run", "--project-dir", "duck_dbt", "--profiles-dir", "duck_dbt"]
     
     if args.full_refresh:
         cli_args.append("--full-refresh")
