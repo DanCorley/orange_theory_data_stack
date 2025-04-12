@@ -1,9 +1,10 @@
 [runtime]
 dlthub_telemetry = true
-log_level="DEBUG"
+log_level="INFO"
 
 [load]
 workers=3
+delete_completed_jobs=true
 
 [destination.filesystem]
 bucket_url = '.'
