@@ -6,21 +6,32 @@ sources:
       external_location: "delta_scan('{prefix}/{name}/')"
       prefix: "otf_api_data"
     tables: 
-    - name: telemetry
-    - name: body_composition
-    - name: bookings
-    - name: heart_rate
-    - name: heart_rate__history
-    - name: me
-    - name: performance_summaries
-    - name: telemetry__telemetry
-    - name: challenges
-    - name: challenges__benchmarks__years
-    - name: challenges__benchmarks
-    - name: challenges__challenges__years
-    - name: challenges__challenges
-    - name: challenges__programs__years
-    - name: challenges__programs
+      - name: benchmark_activity
+      - name: benchmark_activity__challenge_histories
+      - name: benchmark_activity__challenge_histories__benchmark_histories
+      - name: benchmark_activity__challenge_histories__benchmark_histories__linked_challenges
+      - name: benchmarks
+      - name: benchmarks__years
+      - name: body_composition
+      - name: bookings
+      - name: challenge_activity
+      - name: challenge_activity__challenge_histories
+      - name: challenges
+      - name: challenges__benchmarks
+      - name: challenges__benchmarks__years
+      - name: challenges__challenges
+      - name: challenges__challenges__years
+      - name: challenges__programs
+      - name: challenges__programs__years
+      - name: challenges__years
+      - name: duck.db
+      - name: heart_rate
+      - name: heart_rate__history
+      - name: init
+      - name: me
+      - name: performance_summaries
+      - name: telemetry
+      - name: telemetry__telemetry
 
   - name: dlt_metadata
     meta:
