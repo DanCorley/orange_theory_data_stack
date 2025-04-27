@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Generator
 
 import dlt
@@ -61,7 +61,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                             "cursor_path": "created_at",
                             "initial_value": "2021-01-01T00:00:00Z",
                         },
-                        "ends_before": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "ends_before": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                         "include_canceled": "false",
                     },
                 },
