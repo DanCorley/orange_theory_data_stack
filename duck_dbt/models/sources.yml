@@ -24,7 +24,6 @@ sources:
       - name: challenges__programs
       - name: challenges__programs__years
       - name: challenges__years
-      - name: duck.db
       - name: heart_rate
       - name: heart_rate__history
       - name: init
