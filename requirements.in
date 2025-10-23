@@ -1,0 +1,8 @@
+dbt-core==1.10.13
+dbt-duckdb==1.9.6
+dbt-metabase==1.3.10
+dlt[deltalake]==1.17.1
+duckdb==1.2.2
+pip-tools==7.4.1
+pyarrow>=17.0.0
+sqlfluff-templater-dbt==3.2.3
