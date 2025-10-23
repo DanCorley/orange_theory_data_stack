@@ -31,3 +31,9 @@ dbt-metabase:
 
 lint:
 	cd dbt && sqlfluff lint;
+
+requirements:
+	python3 -m venv .venv && \
+  source .venv/bin/activate && \
+	pip install pip-tools && \
+	pip-compile requirements.in;
