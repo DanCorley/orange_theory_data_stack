@@ -5,4 +5,5 @@ dlt[deltalake]==1.17.1
 duckdb==1.2.2
 pip-tools==7.4.1
 pyarrow>=17.0.0
+python-dotenv==1.2.1
 sqlfluff-templater-dbt==3.2.3
