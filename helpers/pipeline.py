@@ -12,6 +12,7 @@ from .auth import OAuth2OTF
 @dlt.source
 def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[DltResource, None, None]:
 
+    _id_token = OAuth2OTF().return_id_token()
 
     def invalidate_null_content(response: Response) -> Response:
         """Set the status code to 204 if the response content is an empty string"""
@@ -30,7 +31,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
     config: RESTAPIConfig = {
         "client": {
             "base_url": "",
-            "headers": OAuth2OTF().build_access_token_request(),
+            "headers": {'Authorization': _id_token},
         },
         "resource_defaults": {
             "primary_key": "id",
