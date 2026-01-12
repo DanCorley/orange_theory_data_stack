@@ -106,7 +106,7 @@ def otf_source(args) -> Generator[DltResource, None, None]:
                     "data_selector": "$",
                     "params": {
                         "classHistoryUuid": "{resources.bookings.workout.id}",
-                        "maxDataPoints": 853
+                        "maxDataPoints": 150
                     },
                 },
             },
