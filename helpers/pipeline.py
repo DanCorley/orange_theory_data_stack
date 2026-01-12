@@ -60,7 +60,7 @@ def otf_source(args) -> Generator[DltResource, None, None]:
                         "starts_after": {
                             "type": "incremental",
                             "cursor_path": "created_at",
-                            "initial_value": "2025-01-01T00:00:00Z",
+                            "initial_value": "2021-01-01T00:00:00Z",
                         },
                         "ends_before": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                         "include_canceled": "false",
