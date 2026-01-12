@@ -1,44 +1,88 @@
-# OTF Pipeline
-A reverse engineering project to extract orange theory workout data for local personal use. **No data is stored on any remote server** keeping to a privacy first approach.
+# OTF Pipeline: Reverse Engineering Orange Theory Workout Data
 
-Includes pipeline to incrementally extract data from the orange theory API and transform with dbt in a duckdb database. Finally, a dockerized metabase instance paired with duckdb driver is included to allow for data exploration.
+This project reverse engineers the Orange Theory Fitness APIs to extract workout data for local, personal use.  **Your data stays local – no data is stored on any remote server**, prioritizing your privacy.
+
+This pipeline incrementally extracts data from the Orange Theory API using dlt, transforms it with dbt within a DuckDB database, and provides a Dockerized Metabase instance for data exploration.
+
+Interested in saving your data to another format?  Check out the [Exporting to other file types](#other-filetypes) section below.
+
+## Key Features:
+
+*   **Privacy-Focused:** All data processing and storage occur locally.
+*   **Incremental Extraction:**  Data is pulled in stages, allowing for updates and avoiding full data downloads.
+*   **dbt Transformations:**  Data is cleaned and transformed using dbt (data build tool) for consistent and reusable logic.
+*   **DuckDB Database:** Leverages DuckDB for fast, in-memory data processing.
+*   **Dockerized Metabase:** Provides a playground for data exploration.
 
 ## Tech Stack:
-- dlt : https://dlthub.com
-- duckdb : https://duckdb.org
-- dbt : https://www.getdbt.com
-- metabase : https://www.metabase.com
-- docker : https://www.docker.com
+
+*   **dlt:**  [https://dlthub.com](https://dlthub.com) - Data Load Tool for extracting data.
+*   **DuckDB:** [https://duckdb.org](https://duckdb.org) -  Embedded, in-process SQL OLAP database.
+*   **dbt:** [https://www.getdbt.com](https://www.getdbt.com) - Transformation tool.
+*   **Metabase:** [https://www.metabase.com](https://www.metabase.com) - Open source business intelligence tool.
 
 ## Getting Started:
 
-copy .env.example to .env and modify `ORANGE_THEORY_EMAIL` and `ORANGE_THEORY_PASSWORD` to those used to login to the Orange Theory App. *These credentials never leave your local machine.*
+1.  **Environment Setup:**
 
-```shell
-# create a virtual environment to work in
-> make venv
+    *   Copy `.env.example` to `.env` and fill in your Orange Theory email and password:
 
-# use dlt to download all data to deltatable files + create dbt models in duckdb
-> python otf_pipeline.py
+        ```bash
+        cp .env.example .env
+        ```
 
-# download the duckdb metabase driver and build docker image
-> make build
+        **Note:**  These credentials are only used locally and never stored remotely.
 
-# copy .env.example to .env and create secrets database credentials
-# run metabase! visit http://localhost:3000 for your instance
-> make up
-# and to shut it down
-> make down
+2.  **Data Extraction and Transformation:**
 
-# modify metabase credentials in dbt/dbt_metabase_config.yml
-# create primary / foreign key relationships in metabase
-> make dbt-metabase
-```
+    *   Create a virtual environment (recommended):
+
+        ```bash
+        make venv
+        ```
+
+    *   Run the data extraction and transformation pipeline:
+
+        ```bash
+        python otf_pipeline.py
+        ```
+
+        This command uses `dlt` to download data and create dbt models in DuckDB.
+
+    *   Raw data is stored in `./otf_api_data/` as delta tables.
+
+3.  **Metabase & DuckDB Setup:**
+
+    *   Build the DuckDB Metabase driver and Docker image:
+
+        ```bash
+        make build
+        ```
+
+    *   Start the Metabase container:
+        * set initial POSTGRES_ credentials to your .env file, then run
+        ```bash
+        make up
+        ```
+
+        This will launch Metabase. Access it at `http://localhost:3000`. 
+
+    *   Stop the Metabase container when finished:
+
+        ```bash
+        make down
+        ```
 
 
-Wants to have:
-- [x] data extraction with dlt
-- [x] transofrmations with dbt and duckdb
-- [x] dockerize duckdb-metabase
-- [] data dashboard insights in metabase
+## Status:
 
+*   [x] Data extraction with dlt
+*   [x] Transformations with dbt and DuckDB
+*   [x] Dockerized DuckDB-Metabase
+*   [ ] Fully configured data dashboard insights in Metabase
+
+## <a name="other-filetypes"></a>Exporting to other file types:
+
+using dlt as a backbone for this project enables us to easily export our data to other file types.  For example, we can comment out the `"table_format": "delta"` line in [helpers/pipeline.py](./helpers/pipeline.py) to automatically write jsonl files.
+
+**Note**: Using delta as our default filetype allows for incremental unloading of data.  If you change the filetype, you will likely refresh ALL data on each run.
