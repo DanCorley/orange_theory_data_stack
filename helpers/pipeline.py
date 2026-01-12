@@ -10,7 +10,7 @@ from .auth import OAuth2OTF
 
 
 @dlt.source
-def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[DltResource, None, None]:
+def otf_source(args) -> Generator[DltResource, None, None]:
 
     _id_token = OAuth2OTF().return_id_token()
 
@@ -43,6 +43,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "name": "me",
                 "endpoint": {
                     "path": "https://api.orangetheory.io/v1/people/me",
+                    "data_selector": "$",
                     "paginator": "single_page",
                 },
             },
@@ -83,7 +84,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "name": "body_composition",
                 "primary_key": "scanResultUUId",
                 "endpoint": {
-                    "path": f"https://api.orangetheory.co/member/members/{member_uuid}/body-composition",
+                    "path": "https://api.orangetheory.co/member/members/{resources.me.mbo_client_id}/body-composition",
                     "paginator": "single_page",
                 }
             },
@@ -91,7 +92,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "name": "heart_rate",
                 "primary_key": "memberUuid",
                 "endpoint": {
-                    "path": f"https://api.yuzu.orangetheory.com/v1/physVars/maxHr/history?memberUuid={member_uuid}",
+                    "path": "https://api.yuzu.orangetheory.com/v1/physVars/maxHr/history?memberUuid={resources.me.mbo_client_id}",
                     "paginator": "single_page",
                     "data_selector": "$",
                 },
@@ -113,8 +114,9 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
             {
                 "name": "challenges",
                 "primary_key": ["ChallengeCategoryId", "ChallengeSubCategoryId"],
+                "include_from_parent": ["mbo_client_id"],
                 "endpoint": {
-                    "path": f"https://api.orangetheory.co/challenges/v3.1/member/{member_uuid}",
+                    "path": "https://api.orangetheory.co/challenges/v3.1/member/{resources.me.mbo_client_id}",
                     "data_selector": "$.Dto[Programs,Challenges][*]",
                 },
             },
@@ -124,7 +126,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "include_from_parent": ["ChallengeSubCategoryId"],
                 "max_table_nesting": 1,
                 "endpoint": {
-                    "path": f"https://api.orangetheory.co/challenges/v3/member/{member_uuid}/benchmarks",
+                    "path": "https://api.orangetheory.co/challenges/v3/member/{resources.challenges._me_mbo_client_id}/benchmarks",
                     "paginator": "single_page",
                     "data_selector": "$.Dto",
                     "params": {
@@ -136,9 +138,10 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
             {
                 # benchmarks have a different schema than challenges, but same endpoint
                 "name": "benchmarks",
+                "include_from_parent": ["mbo_client_id"],
                 "primary_key": ["EquipmentId", "EquipmentName"],
                 "endpoint": {
-                    "path": f"https://api.orangetheory.co/challenges/v3.1/member/{member_uuid}",
+                    "path": "https://api.orangetheory.co/challenges/v3.1/member/{resources.me.mbo_client_id}",
                     "data_selector": "$.Dto.Benchmarks[*]",
                 },
             },
@@ -146,7 +149,7 @@ def otf_source(args, member_uuid:str = dlt.secrets["member_uuid"]) -> Generator[
                 "name": "benchmark_activity",
                 "primary_key": ["ChallengeCategoryId", "EquipmentId"],
                 "endpoint": {
-                    "path": f"https://api.orangetheory.co/challenges/v3/member/{member_uuid}/benchmarks",
+                    "path": "https://api.orangetheory.co/challenges/v3/member/{resources.benchmarks._me_mbo_client_id}/benchmarks",
                     "paginator": "single_page",
                     "data_selector": "$.Dto",
                     "params": {
