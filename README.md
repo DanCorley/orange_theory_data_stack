@@ -1,12 +1,20 @@
-# otf_pipeline
-a full setup to capture and analyze orange theory workout data - dlt, deltalake, duckdb, dbt, metabase, docker
+# OTF Pipeline
+A reverse engineering project to extract orange theory workout data for local personal use. **No data is stored on any remote server** keeping to a privacy first approach.
 
+Includes pipeline to incrementally extract data from the orange theory API and transform with dbt in a duckdb database. Finally, a dockerized metabase instance paired with duckdb driver is included to allow for data exploration.
 
-get up and running in only a few simple steps!
+## Tech Stack:
+- dlt : https://dlthub.com
+- duckdb : https://duckdb.org
+- dbt : https://www.getdbt.com
+- metabase : https://www.metabase.com
+- docker : https://www.docker.com
+
+## Getting Started:
+
+copy .env.example to .env and modify `ORANGE_THEORY_EMAIL` and `ORANGE_THEORY_PASSWORD` to those used to login to the Orange Theory App. *These credentials never leave your local machine.*
 
 ```shell
-# after pulling REFRESH_TOKEN_AUTH from Proxyman via OTF app
-
 # create a virtual environment to work in
 > make venv
 
@@ -16,7 +24,7 @@ get up and running in only a few simple steps!
 # download the duckdb metabase driver and build docker image
 > make build
 
-# copy .env.example to .env and add modify database credentials
+# copy .env.example to .env and create secrets database credentials
 # run metabase! visit http://localhost:3000 for your instance
 > make up
 # and to shut it down
@@ -29,7 +37,6 @@ get up and running in only a few simple steps!
 
 
 Wants to have:
-- [] how to pull authorization with Proxyman
 - [x] data extraction with dlt
 - [x] transofrmations with dbt and duckdb
 - [x] dockerize duckdb-metabase

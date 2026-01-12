@@ -1,33 +1,47 @@
 import os
-import json
 import requests
+from dotenv import load_dotenv
 from dlt.sources.helpers.rest_client.auth import AuthConfigBase
 
 
 class OAuth2OTF(AuthConfigBase):
 
-    def __init__(self, file_name:str = '.dlt/aws_refresh_payload.json'):
-        self.file_name = file_name
+    def __init__(self):
+        """Initialize the authentication class"""
+        load_dotenv(".env")
+        self.username = os.getenv("ORANGE_THEORY_EMAIL")
+        self.password = os.getenv("ORANGE_THEORY_PASSWORD")
 
-    def build_access_token_request(self) -> dict:
-        '''helper to set the aws auth'''
+        if not self.username or not self.password:
+            raise ValueError(
+                "ORANGE_THEORY_EMAIL and ORANGE_THEORY_PASSWORD must be set in .env file"
+            )
 
-        file_path = os.path.join(self.file_name)
-        
-        with open(file_path, 'r') as f:
-            payload = json.load(f)
 
-        # validate top keys exist in payload
-        for key in ['AuthParameters', 'AuthFlow', 'ClientId']:
-            assert key in payload, f'key {key} not found in payload.'
+    def return_id_token(self) -> dict:
+        """Authenticate with username/password and return the full auth response"""
+
+        headers = {
+            'X-Amz-Target' : 'AWSCognitoIdentityProviderService.InitiateAuth',
+            'X-Otf-Target' : 'UserAuthentication',
+            'Content-Type' : 'application/x-amz-json-1.1',
+        }
+
+        data = {
+            "ClientId": "65knvqta6p37efc2l3eh26pl5o",
+            "AuthFlow": "USER_PASSWORD_AUTH",
+            "AuthParameters": {
+                "USERNAME": self.username,
+                "PASSWORD": self.password
+            }
+        }
 
         response = requests.post(
             url="https://cognito-idp.us-east-1.amazonaws.com",
-            headers={
-                'Content-Type': 'application/x-amz-json-1.1',
-                'X-Amz-Target': 'AWSCognitoIdentityProviderService.InitiateAuth'
-            },
-            json=payload
+            headers=headers,
+            json=data
         )
         response.raise_for_status()
-        return {'Authorization': response.json()['AuthenticationResult']['IdToken']}
+        id_token = response.json().get('AuthenticationResult', {}).get('IdToken')
+        
+        return id_token
