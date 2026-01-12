@@ -22,15 +22,9 @@ class OAuth2OTF(AuthConfigBase):
         """Authenticate with username/password and return the full auth response"""
 
         headers = {
-            "Host": "cognito-idp.us-east-1.amazonaws.com",
-            "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "Accept": "*/*",
-            "User-Agent": "Orangetheory/1 CFNetwork/1402.0.8 Darwin/22.2.0",
-            "Accept-Language": "en-US,en;q=0.9",
-            "X-Otf-Target": "UserAuthentication",
-            "Content-Type": "application/x-amz-json-1.1",
+            'X-Amz-Target' : 'AWSCognitoIdentityProviderService.InitiateAuth',
+            'X-Otf-Target' : 'UserAuthentication',
+            'Content-Type' : 'application/x-amz-json-1.1',
         }
 
         data = {
