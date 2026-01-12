@@ -173,6 +173,7 @@ secrets.toml
 *.duckdb
 *.wal
 .dlt/*.json
+duck_dbt/logs/*
 
 otf_api_data/**/*.parquet
 otf_api_data/**/*.json*
